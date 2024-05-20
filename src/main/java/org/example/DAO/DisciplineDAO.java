@@ -1,5 +1,6 @@
 package org.example.DAO;
 
+import org.example.DTO.DisciplineDTO;
 import org.example.connection.toDB.ConnectionToAthletes;
 import org.example.entity.Discipline;
 
@@ -25,18 +26,18 @@ public class DisciplineDAO {
     }
 
 
-    public List<Discipline> getAllDisciplines() {
+    public List<DisciplineDTO> getAllDisciplines() {
 
         Connection connection = CONNECT.getConnect();
 
-        List<Discipline> disciplines = new ArrayList<>();
+        List<DisciplineDTO> disciplines = new ArrayList<>();
 
         try(Statement statement = connection.createStatement()) {
 
             ResultSet resultSet = statement.executeQuery(SELECT_ALL);
 
             while (resultSet.next()){
-                Discipline discipline = new Discipline(resultSet.getInt("DISCIPLINE_ID"),
+                DisciplineDTO discipline = new DisciplineDTO(resultSet.getInt("DISCIPLINE_ID"),
                         resultSet.getString("disciplineName"),
                         resultSet.getString("disciplineCreatedAt"),
                         resultSet.getString("disciplineLastChange"));
@@ -101,11 +102,11 @@ public class DisciplineDAO {
     }
 
 
-    public Discipline getDisciplineByName(String name) {
+    public DisciplineDTO getDisciplineByName(String name) {
 
         Connection connection = CONNECT.getConnect();
 
-        Discipline discipline = null;
+        DisciplineDTO discipline = null;
 
         final String SELECT_EVENT = "SELECT * FROM disciplines WHERE disciplineName = %s".formatted(name);
 
@@ -115,7 +116,7 @@ public class DisciplineDAO {
 
             while (resultSet.next()){
                 if (resultSet.getString("disciplineName").equals(name)) {
-                    discipline = new Discipline(resultSet.getInt("DISCIPLINE_ID"),
+                    discipline = new DisciplineDTO(resultSet.getInt("DISCIPLINE_ID"),
                             resultSet.getString("disciplineName"),
                             resultSet.getString("disciplineCreatedAt"),
                             resultSet.getString("disciplineLastChange"));

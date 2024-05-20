@@ -1,5 +1,6 @@
 package org.example.DAO;
 
+import org.example.DTO.ProfileDTO;
 import org.example.connection.toDB.ConnectionToAthletes;
 import org.example.entity.Profile;
 
@@ -17,7 +18,9 @@ public class ProfileDAO {
     private final ConnectionToAthletes CONNECT;
     LocalDateTime today = LocalDateTime.now();
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss:SSS");
-    private static final String SELECT_ALL = "SELECT * FROM profiles";
+    private static final String SELECT_ALL = "SELECT * FROM profiles p LEFT JOIN athletes a ON p.ATHLETE_ID = a.ATHLETE_ID" +
+            "LEFT JOIN disciplines d ON p.DISCIPLINE_ID = d.DISCIPLINE_ID" +
+            "LEFT JOIN categories c ON p.CATEGORY_ID = c.CATEGORY_ID";
 
 
     public ProfileDAO(ConnectionToAthletes CONNECT) {
@@ -25,26 +28,28 @@ public class ProfileDAO {
     }
 
 
-    public List<Profile> getAllProfiles() {
+    public List<ProfileDTO> getAllProfiles() {
 
         Connection connection = CONNECT.getConnect();
 
-        List<Profile> profiles = new ArrayList<>();
+        List<ProfileDTO> profiles = new ArrayList<>();
 
         try(Statement statement = connection.createStatement()) {
 
             ResultSet resultSet = statement.executeQuery(SELECT_ALL);
 
             while (resultSet.next()){
-                Profile profile = new Profile(resultSet.getInt("PROFILE_ID"),
-                        resultSet.getInt("ATHLETE_ID"),
-                        resultSet.getInt("disciplineID"),
-                        resultSet.getInt("categoryID"),
+                ProfileDTO profileDTO = new ProfileDTO(resultSet.getInt("PROFILE_ID"),
+                        resultSet.getString("name"),
+                        resultSet.getString("birthday"),
+                        resultSet.getString("country"),
+                        resultSet.getString("discipline"),
+                        resultSet.getString("category"),
                         resultSet.getString("bio"),
                         resultSet.getString("profileCreatedAt"),
                         resultSet.getString("profileLastChange"));
 
-                profiles.add(profile);
+                profiles.add(profileDTO);
             }
         } catch (SQLException e) {
             throw new RuntimeException("It's not possible to select all profiles of them", e);
@@ -107,24 +112,29 @@ public class ProfileDAO {
     }
 
 
-    public Profile getProfileByAthleteID(int id) {
+    public ProfileDTO getProfileByAthleteID(int id) {
 
         Connection connection = CONNECT.getConnect();
 
-        Profile profile = null;
+        ProfileDTO profileDTO = null;
 
-        final String SELECT_EVENT_RESULT = "SELECT * FROM profiles WHERE ATHLETE_ID = %d".formatted(id);
+        final String SELECT_EVENT_RESULT = ("SELECT * FROM profiles p LEFT JOIN athletes a ON p.ATHLETE_ID = a.ATHLETE_ID" +
+                "LEFT JOIN disciplines d ON p.DISCIPLINE_ID = d.DISCIPLINE_ID" +
+                "LEFT JOIN categories c ON p.CATEGORY_ID = c.CATEGORY_ID" +
+                "WHERE ATHLETE_ID = %d").formatted(id);
 
         try(Statement statement = connection.createStatement()) {
 
             ResultSet resultSet = statement.executeQuery(SELECT_EVENT_RESULT);
 
             while (resultSet.next()){
-                if (resultSet.getInt("athleteID") == id) {
-                    profile = new Profile(resultSet.getInt("PROFILE_ID"),
-                            resultSet.getInt("ATHLETE_ID"),
-                            resultSet.getInt("disciplineID"),
-                            resultSet.getInt("categoryID"),
+                if (resultSet.getInt("ATHLETE_ID") == id) {
+                    profileDTO = new ProfileDTO(resultSet.getInt("PROFILE_ID"),
+                            resultSet.getString("name"),
+                            resultSet.getString("birthday"),
+                            resultSet.getString("country"),
+                            resultSet.getString("discipline"),
+                            resultSet.getString("category"),
                             resultSet.getString("bio"),
                             resultSet.getString("profileCreatedAt"),
                             resultSet.getString("profileLastChange"));
@@ -135,6 +145,6 @@ public class ProfileDAO {
             throw new RuntimeException("It's not possible to select this profile of them", e);
         }
 
-        return profile;
+        return profileDTO;
     }
 }

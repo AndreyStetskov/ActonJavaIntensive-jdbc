@@ -1,5 +1,6 @@
 package org.example.DAO;
 
+import org.example.DTO.EventResultDTO;
 import org.example.connection.toDB.ConnectionToAthletes;
 import org.example.entity.EventResult;
 
@@ -17,7 +18,9 @@ public class EventResultDAO {
     private final ConnectionToAthletes CONNECT;
     LocalDateTime today = LocalDateTime.now();
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss:SSS");
-    private static final String SELECT_ALL = "SELECT * FROM eventResults";
+    private static final String SELECT_ALL = "SELECT * FROM eventResults er LEFT JOIN events e у ON er.EVENT_ID = e.EVENT_ID" +
+            "LEFT JOIN disciplines d ON er.DISCIPLINE_ID = d.DISCIPLINE_ID" +
+            "er LEFT JOIN athletes a ON p.ATHLETE_ID = a.ATHLETE_ID";
 
 
     public EventResultDAO(ConnectionToAthletes CONNECT) {
@@ -25,20 +28,21 @@ public class EventResultDAO {
     }
 
 
-    public List<EventResult> getAllEventResults() {
+    public List<EventResultDTO> getAllEventResults() {
 
         Connection connection = CONNECT.getConnect();
 
-        List<EventResult> eventResults = new ArrayList<>();
+        List<EventResultDTO> eventResults = new ArrayList<>();
 
         try(Statement statement = connection.createStatement()) {
 
             ResultSet resultSet = statement.executeQuery(SELECT_ALL);
 
             while (resultSet.next()){
-                EventResult eventResult = new EventResult(resultSet.getInt("EVENT_RESULT_ID"),
-                        resultSet.getInt("disciplineID"),
-                        resultSet.getInt("athleteID"),
+                EventResultDTO eventResult = new EventResultDTO(resultSet.getInt("EVENT_ID"),
+                        resultSet.getString("discipline"),
+                        resultSet.getString("athleteName"),
+                        resultSet.getString("athleteCountry"),
                         resultSet.getString("result"),
                         resultSet.getString("eventResultCreatedAt"),
                         resultSet.getString("eventResultLastChange"));
@@ -56,7 +60,7 @@ public class EventResultDAO {
 
         Connection connection = CONNECT.getConnect();
 
-        final String INSERT_EVENT_RESULT = "INSERT INTO eventResults VALUES (%d, %d, '%d', '%s', '%s')".formatted(eventResult.getEVENT_RESULT_ID(),
+        final String INSERT_EVENT_RESULT = "INSERT INTO eventResults VALUES (%d, %d, '%d', '%s', '%s')".formatted(eventResult.getEVENT_ID(),
                 eventResult.getDisciplineID(),
                 eventResult.getAthleteID(),
                 eventResult.getResult(),
@@ -105,13 +109,16 @@ public class EventResultDAO {
     }
 
 
-    public EventResult getEventResultByAthleteID(int id) {
+    public EventResultDTO getEventResultByAthleteID(int id) {
 
         Connection connection = CONNECT.getConnect();
 
-        EventResult eventResult = null;
+        EventResultDTO eventResult = null;
 
-        final String SELECT_EVENT_RESULT = "SELECT * FROM eventResults WHERE athleteID = %d".formatted(id);
+        final String SELECT_EVENT_RESULT = ("SELECT * FROM eventResults er LEFT JOIN events e у ON er.EVENT_ID = e.EVENT_ID" +
+                "LEFT JOIN disciplines d ON er.DISCIPLINE_ID = d.DISCIPLINE_ID" +
+                "er LEFT JOIN athletes a ON p.ATHLETE_ID = a.ATHLETE_ID" +
+                "WHERE athleteID = %d").formatted(id);
 
         try(Statement statement = connection.createStatement()) {
 
@@ -119,9 +126,10 @@ public class EventResultDAO {
 
             while (resultSet.next()){
                 if (resultSet.getInt("athleteID") == id) {
-                    eventResult = new EventResult(resultSet.getInt("EVENT_RESULT_ID"),
-                            resultSet.getInt("disciplineID"),
-                            resultSet.getInt("athleteID"),
+                    eventResult = new EventResultDTO(resultSet.getInt("EVENT_RESULT_ID"),
+                            resultSet.getString("discipline"),
+                            resultSet.getString("athleteName"),
+                            resultSet.getString("athleteCountry"),
                             resultSet.getString("result"),
                             resultSet.getString("eventResultCreatedAt"),
                             resultSet.getString("eventResultLastChange"));

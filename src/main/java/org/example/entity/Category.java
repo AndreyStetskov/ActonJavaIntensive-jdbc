@@ -16,12 +16,6 @@ public class Category {
         this.categoryCreatedAt = categoryCreatedAt;
     }
 
-    public Category(int CATEGORY_ID, String categoryName, String categoryCreatedAt, String categoryLastChange) {
-        this.CATEGORY_ID = CATEGORY_ID;
-        this.categoryName = categoryName;
-        this.categoryCreatedAt = LocalDateTime.parse(categoryCreatedAt);
-        this.categoryLastChange = LocalDateTime.parse(categoryLastChange);
-    }
 
     public int getCATEGORY_ID() {
         return CATEGORY_ID;

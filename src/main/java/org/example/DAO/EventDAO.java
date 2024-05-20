@@ -1,5 +1,6 @@
 package org.example.DAO;
 
+import org.example.DTO.EventDTO;
 import org.example.connection.toDB.ConnectionToAthletes;
 import org.example.entity.Event;
 
@@ -25,18 +26,18 @@ public class EventDAO {
     }
 
 
-    public List<Event> getAllEvent() {
+    public List<EventDTO> getAllEvent() {
 
         Connection connection = CONNECT.getConnect();
 
-        List<Event> events = new ArrayList<>();
+        List<EventDTO> events = new ArrayList<>();
 
         try(Statement statement = connection.createStatement()) {
 
             ResultSet resultSet = statement.executeQuery(SELECT_ALL);
 
             while (resultSet.next()){
-                Event event = new Event(resultSet.getInt("EVENT_ID"),
+                EventDTO event = new EventDTO(resultSet.getInt("EVENT_ID"),
                         resultSet.getString("eventName"),
                         resultSet.getString("eventDate"),
                         resultSet.getString("eventCreatedAt"),
@@ -103,11 +104,11 @@ public class EventDAO {
     }
 
 
-    public Event getEventByName(String name) {
+    public EventDTO getEventByName(String name) {
 
         Connection connection = CONNECT.getConnect();
 
-        Event event = null;
+        EventDTO event = null;
 
         final String SELECT_EVENT = "SELECT * FROM events WHERE eventName = %s".formatted(name);
 
@@ -117,7 +118,7 @@ public class EventDAO {
 
             while (resultSet.next()){
                 if (resultSet.getString("eventName").equals(name)) {
-                    event = new Event(resultSet.getInt("EVENT_ID"),
+                    event = new EventDTO(resultSet.getInt("EVENT_ID"),
                             resultSet.getString("eventName"),
                             resultSet.getString("eventDate"),
                             resultSet.getString("eventCreatedAt"),

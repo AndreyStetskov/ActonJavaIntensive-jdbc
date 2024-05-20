@@ -1,5 +1,6 @@
 package org.example.DAO;
 
+import org.example.DTO.AthleteDTO;
 import org.example.connection.toDB.ConnectionToAthletes;
 import org.example.entity.Athlete;
 
@@ -26,18 +27,18 @@ public class AthleteDAO {
     }
 
 
-    public List<Athlete> getAllAthletes() {
+    public List<AthleteDTO> getAllAthletes() {
 
         Connection connection = CONNECT.getConnect();
 
-        List<Athlete> athletes = new ArrayList<>();
+        List<AthleteDTO> athletes = new ArrayList<>();
 
         try(Statement statement = connection.createStatement()) {
 
             ResultSet resultSet = statement.executeQuery(SELECT_ALL);
 
             while (resultSet.next()){
-                Athlete athlete = new Athlete(resultSet.getInt("ATHLETE_ID"),
+                AthleteDTO athlete = new AthleteDTO(resultSet.getInt("ATHLETE_ID"),
                         resultSet.getString("athleteName"),
                         resultSet.getString("athleteBirthday"),
                         resultSet.getString("athleteCountry"),
@@ -131,11 +132,11 @@ public class AthleteDAO {
     }
 
 
-    public Athlete getAthleteByID(int id) {
+    public AthleteDTO getAthleteByID(int id) {
 
         Connection connection = CONNECT.getConnect();
 
-        Athlete athlete = null;
+        AthleteDTO athlete = null;
 
         final String SELECT_ATHLETE = "SELECT * FROM athletes WHERE ATHLETE_ID = %d".formatted(id);
 
@@ -145,7 +146,7 @@ public class AthleteDAO {
 
             while (resultSet.next()){
                 if (resultSet.getInt("ATHLETE_ID") == id) {
-                    athlete = new Athlete(resultSet.getInt("ATHLETE_ID"),
+                    athlete = new AthleteDTO(resultSet.getInt("ATHLETE_ID"),
                             resultSet.getString("athleteName"),
                             resultSet.getString("athleteBirthday"),
                             resultSet.getString("athleteCountry"),

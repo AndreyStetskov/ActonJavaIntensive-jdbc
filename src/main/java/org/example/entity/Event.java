@@ -19,13 +19,6 @@ public class Event {
         this.eventCreatedAt = eventCreatedAt;
     }
 
-    public Event(int EVENT_ID, String eventName, String eventDate, String eventCreatedAt, String EventLastChange) {
-        this.EVENT_ID = EVENT_ID;
-        this.eventName = eventName;
-        this.eventDate = LocalDate.parse(eventDate);
-        this.eventCreatedAt = LocalDateTime.parse(eventCreatedAt);
-        this.eventLastChange = LocalDateTime.parse(EventLastChange);
-    }
 
     public int getEVENT_ID() {
         return EVENT_ID;

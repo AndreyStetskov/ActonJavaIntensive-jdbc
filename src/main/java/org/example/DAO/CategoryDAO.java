@@ -1,5 +1,6 @@
 package org.example.DAO;
 
+import org.example.DTO.CategoryDTO;
 import org.example.connection.toDB.ConnectionToAthletes;
 import org.example.entity.Category;
 
@@ -25,18 +26,18 @@ public class CategoryDAO {
     }
 
 
-    public List<Category> getAllCategories() {
+    public List<CategoryDTO> getAllCategories() {
 
         Connection connection = CONNECT.getConnect();
 
-        List<Category> categories = new ArrayList<>();
+        List<CategoryDTO> categories = new ArrayList<>();
 
         try(Statement statement = connection.createStatement()) {
 
             ResultSet resultSet = statement.executeQuery(SELECT_ALL);
 
             while (resultSet.next()){
-                Category category = new Category(resultSet.getInt("CATEGORY_ID"),
+                CategoryDTO category = new CategoryDTO(resultSet.getInt("CATEGORY_ID"),
                         resultSet.getString("categoryName"),
                         resultSet.getString("categoryCreatedAt"),
                         resultSet.getString("categoryLastChange"));
@@ -101,11 +102,11 @@ public class CategoryDAO {
     }
 
 
-    public Category getCategoryByName(String name) {
+    public CategoryDTO getCategoryByName(String name) {
 
         Connection connection = CONNECT.getConnect();
 
-        Category category = null;
+        CategoryDTO category = null;
 
         final String SELECT_CATEGORY = "SELECT * FROM categories WHERE categoryName = %s".formatted(name);
 
@@ -115,7 +116,7 @@ public class CategoryDAO {
 
             while (resultSet.next()){
                 if (resultSet.getString("categoryName").equals(name)) {
-                    category = new Category(resultSet.getInt("CATEGORY_ID"),
+                    category = new CategoryDTO(resultSet.getInt("CATEGORY_ID"),
                             resultSet.getString("categoryName"),
                             resultSet.getString("categoryCreatedAt"),
                             resultSet.getString("categoryLastChange"));

@@ -21,14 +21,6 @@ public class Athlete {
         this.athleteCreatedAt = athleteCreatedAt;
     }
 
-    public Athlete(int ATHLETE_ID, String athleteName, String birthday, String athleteCountry, String athleteCreatedAt, String athleteLastChange) {
-        this.ATHLETE_ID = ATHLETE_ID;
-        this.athleteName = athleteName;
-        this.birthday = LocalDate.parse(birthday);
-        this.athleteCountry = athleteCountry;
-        this.athleteCreatedAt = LocalDateTime.parse(athleteCreatedAt);
-        this.athleteLastChange = LocalDateTime.parse(athleteLastChange);
-    }
 
     public int getATHLETE_ID() {
         return ATHLETE_ID;

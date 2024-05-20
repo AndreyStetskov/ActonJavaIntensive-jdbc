@@ -23,15 +23,6 @@ public class Profile {
         this.profileCreatedAt = profileCreatedAt;
     }
 
-    public Profile(int PROFILE_ID, int ATHLETE_ID, int disciplineID, int categoryID, String bio, String profileCreatedAt, String profileLastChange) {
-        this.PROFILE_ID = PROFILE_ID;
-        this.ATHLETE_ID = ATHLETE_ID;
-        this.disciplineID = disciplineID;
-        this.categoryID = categoryID;
-        this.bio = bio;
-        this.profileCreatedAt = LocalDateTime.parse(profileCreatedAt);
-        this.profileLastChange = LocalDateTime.parse(profileLastChange);
-    }
 
     public int getPROFILE_ID() {
         return PROFILE_ID;

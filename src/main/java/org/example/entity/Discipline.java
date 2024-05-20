@@ -17,12 +17,6 @@ public class Discipline {
         this.disciplineCreatedAt = disciplineCreatedAt;
     }
 
-    public Discipline(int DISCIPLINE_ID, String disciplineName, String disciplineCreatedAt, String disciplineLastChange) {
-        this.DISCIPLINE_ID = DISCIPLINE_ID;
-        this.disciplineName = disciplineName;
-        this.disciplineCreatedAt = LocalDateTime.parse(disciplineCreatedAt);
-        this.disciplineLastChange = LocalDateTime.parse(disciplineLastChange);
-    }
 
     public int getDISCIPLINE_ID() {
         return DISCIPLINE_ID;

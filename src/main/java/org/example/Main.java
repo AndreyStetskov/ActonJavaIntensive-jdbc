@@ -59,6 +59,6 @@ public class Main {
         eventResultDAO.insertEventResult(eventResult);
         eventResultDAO.deleteEventResultByAthleteID(2);
         eventResultDAO.updateEventResultByDisciplineID(2, eventResult);
-        System.out.println(categoryDAO.getAllCategories());
+        System.out.println(eventResultDAO.getAllEventResults());
     }
 }
